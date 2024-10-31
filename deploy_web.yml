@@ -1,0 +1,28 @@
+---
+- name: Deploy a webpage to the remote server
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Copy index.html to web root
+      copy:
+        src: /home/vagrant/Ansible/Ansible/index.html
+        dest: /usr/share/nginx/html/index.html
+        mode: '0644'
+
+    - name: Ensure Nginx is running
+      systemd:
+        name: nginx
+        state: started
+
